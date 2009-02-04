@@ -1,8 +1,8 @@
-#N canvas 451 156 828 741 10;
-#X msg 531 179 \; pd dsp 1;
-#X msg 149 561 0 \, 360 5000;
-#X obj 152 472 earplug~ 270 -25;
-#X floatatom 306 357 5 0 0 0 - - -;
+#N canvas 340 22 822 659 10;
+#X msg 644 355 \; pd dsp 1;
+#X msg 329 451 0 \, 360 5000;
+#X obj 122 592 earplug~ 270 -25;
+#X floatatom 327 287 5 0 0 0 - - -;
 #N canvas 0 22 385 256 (subpatch) 0;
 #X floatatom 261 193 0 0 0 0 cpu-meter - -;
 #X obj 260 129 cputime;
@@ -23,55 +23,61 @@
 #X connect 7 0 6 0;
 #X coords 0 1 100 -1 120 20 1;
 #X restore 531 31 graph;
-#X msg 610 179 \; pd dsp 0;
+#X msg 723 355 \; pd dsp 0;
 #X text 24 18 earplug~ - convolution binaural filter;
-#X text 23 59 This filter utilizes HRTF measurements (compact set)
+#X text 23 49 This filter utilizes HRTF measurements (compact set)
 of KEMAR Dummy-Head Microphone (http://sound.media.mit.edu/KEMAR.html)
 ;
-#X obj 531 146 soundfiler;
+#X obj 532 186 soundfiler;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array table 4e+06 float 0;
-#X coords 0 1 4e+06 -1 100 60 1;
-#X restore 534 250 graph;
-#X obj 152 413 tabplay~ table;
-#X obj 306 399 line 0 1;
-#X obj 306 376 pack 0 50;
-#X floatatom 307 437 5 0 0 0 - - -;
-#X obj 307 479 line 0 1;
-#X obj 307 456 pack 0 50;
-#X msg 151 618 0 \, 360 5000;
-#X obj 151 643 line 0 1;
-#X obj 149 586 line 0 50;
-#X text 533 215 audio on;
-#X obj 150 236 tabplay~ table;
-#X obj 150 266 dac~;
-#X text 27 99 The impulse response data "earplug_data.txt" must be
+#X array table 23376 float 0;
+#X coords 0 1 23375 -1 100 60 1;
+#X restore 657 272 graph;
+#X obj 122 343 tabplay~ table;
+#X obj 327 329 line 0 1;
+#X obj 327 306 pack 0 50;
+#X floatatom 328 377 5 0 0 0 - - -;
+#X obj 328 419 line 0 1;
+#X obj 328 396 pack 0 50;
+#X msg 331 508 0 \, 360 5000;
+#X obj 331 533 line 0 1;
+#X obj 329 476 line 0 50;
+#X text 646 391 audio on;
+#X obj 120 206 tabplay~ table;
+#X obj 120 236 dac~;
+#X text 27 89 The impulse response data "earplug_data.txt" must be
 in the same path as this external. Must use headphone to hear effective
 filter effects. Fitler could be DSP intensive due to convolution.;
-#X msg 194 211 stop;
-#X text 31 267 original --->;
-#X obj 152 499 dac~ 1 2;
-#X text 31 499 filtered --->;
-#X msg 202 381 stop;
-#X msg 152 381 bang;
-#X msg 147 211 bang;
-#X text 245 617 <---a better circle;
-#X text 244 561 <--- circle with noise;
-#X text 147 668 avoid zipper noise: uase small line grain;
-#X text 351 354 <--- azimuth: 0 - 360 (degrees);
-#X text 351 436 <--- elevation: -40 - 90 (degrees);
-#X text 145 192 start;
-#X text 150 362 start;
-#X msg 532 124 read -resize Spring.wav table;
+#X msg 164 181 stop;
+#X text 11 237 original --->;
+#X obj 122 619 dac~ 1 2;
+#X text 24 590 filtered --->;
+#X msg 172 311 stop;
+#X msg 122 311 bang;
+#X msg 117 181 bang;
+#X text 405 507 <---a better circle;
+#X text 404 451 <--- circle with noise;
+#X text 327 558 avoid zipper noise: uase small line grain;
+#X text 361 284 <--- azimuth: 0 - 360 (degrees);
+#X text 361 376 <--- elevation: -40 - 90 (degrees);
+#X text 115 162 start;
+#X text 120 292 start;
 #X obj 532 103 openpanel;
-#X obj 532 83 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#X obj 532 83 bng 15 250 50 0 empty empty empty 17 7 0 10 -204786 -1
 -1;
 #X text 553 82 <- open a soundfile;
-#X obj 306 303 noise~;
-#X obj 342 331 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 218 295 noise~;
+#X obj 239 323 tgl 15 0 empty empty empty 17 7 0 10 -204786 -1 -1 0
 1;
-#X text 294 281 for testing:;
-#X obj 306 331 *~ 0;
+#X text 226 273 for testing:;
+#X obj 218 343 *~ 0;
+#X msg 532 124 read -resize \$1 table;
+#X msg 541 163 read -resize ../../sound/voice.wav table;
+#X obj 330 267 hsl 128 15 0 360 0 0 empty empty empty -2 -8 0 10 -262130
+-1 -1 12700 1;
+#X obj 331 359 hsl 128 15 -40 90 0 1 empty empty empty -2 -8 0 10 -262130
+-1 -1 11400 0;
+#X obj 541 143 loadbang;
 #X connect 1 0 18 0;
 #X connect 2 0 25 0;
 #X connect 2 1 25 1;
@@ -92,9 +98,13 @@ filter effects. Fitler could be DSP intensive due to convolution.;
 #X connect 27 0 10 0;
 #X connect 28 0 10 0;
 #X connect 29 0 20 0;
-#X connect 37 0 8 0;
+#X connect 37 0 44 0;
 #X connect 38 0 37 0;
-#X connect 39 0 38 0;
-#X connect 41 0 44 0;
-#X connect 42 0 44 1;
-#X connect 44 0 2 0;
+#X connect 40 0 43 0;
+#X connect 41 0 43 1;
+#X connect 43 0 2 0;
+#X connect 44 0 8 0;
+#X connect 45 0 8 0;
+#X connect 46 0 3 0;
+#X connect 47 0 13 0;
+#X connect 48 0 45 0;
