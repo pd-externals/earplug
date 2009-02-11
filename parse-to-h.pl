@@ -19,7 +19,7 @@ for ($i = 0; $i < 368; $i++) {
 }
 close(DATAFILE);
 
-print("float impulses\[368\]\[2\]\[128\] = {\n");
+print("t_float impulses\[368\]\[2\]\[128\] = {\n");
 for ($i = 0; $i < 368; $i++) {
 #  print("/*$comment[$i]*/\n");
 #  print("float $arrayname[$i]\[2\]\[128\] = {\n{");

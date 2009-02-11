@@ -6,7 +6,8 @@
 #include <stdio.h>
 #include <math.h>
 #include "m_pd.h"
-#ifdef NT
+#include "earplug~.h"
+#ifdef _MSC_VER /* Thes pragmas only apply to Microsoft's compiler */
 #pragma warning( disable : 4244 )
 #pragma warning( disable : 4305 )
 #endif
@@ -36,7 +37,7 @@ typedef struct _earplug
     t_float previousImpulse[2][128] ;
     t_float currentImpulse[2][128] ;
     t_float convBuffer[128] ;
-    t_float impulses[368][2][128] ;
+    t_float (*impulses)[2][128];          /* a 3D array of 368x2x128 */
     t_float f ;                   /* dummy float for dsp */
     t_int bufferPin;
 } t_earplug;
@@ -130,7 +131,6 @@ static t_int *earplug_perform(t_int *w)
     float inSample;
 	float convSum[2]; // to accumulate the sum during convolution.
     int blockScale = 8192 / blocksize;
-    int blockBig = blocksize;
 
 	// Convolve the - interpolated - HRIRs (Left and Right) with the input signal.
     while (blocksize--)
@@ -189,21 +189,26 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
 
     if (filedesc < 0) // If there was an error opening the text file...
     {	
-		post("error reading impulse reponse file 'earplug_data.txt'! \n") ;
-        return (x) ;   
-	}
-	
-    fp = fdopen(filedesc, "r") ;  
-   
-    for (i = 0; i < 368; i++) 
-    {
-   	while(fgetc(fp) != 10) ;
-    	for (j = 0 ; j < 128 ; j++)
+        x->impulses = earplug_impulses;
+		post("warning: didn't find impulse reponse file 'earplug_data.txt', using defaults.\n") ;
+	} else {
+        post("let's try loading");
+        //x->impulses = getbytes(sizeof(t_float)*368*2*128);
+        fp = fdopen(filedesc, "r") ;  
+        for (i = 0; i < 368; i++) 
+        {
+            fprintf(stderr, "i%d ", i);
+            while(fgetc(fp) != 10) ;
+            for (j = 0 ; j < 128 ; j++) {
+                fprintf(stderr, "j%d ", j);
+                
 				fscanf(fp, "%f %f ", &x->impulses[i][0][j], &x->impulses[i][1][j]);
-
-	}
-    fclose(fp) ;
-
+            }
+            
+        }
+        fclose(fp) ;
+    }
+    
     post("        earplug~: binaural filter with measured reponses\n") ;
     post("        elevation: -40 to 90 degrees. azimuth: 360") ;
     post("        dont let blocksize > 8192\n"); 
