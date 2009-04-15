@@ -187,27 +187,21 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
 
 	filedesc = open_via_path(canvas_getdir(canvas_getcurrent())->s_name, "earplug_data.txt", "", buff, &bufptr, 1024, 0 );
 
-    if (filedesc < 0) // If there was an error opening the text file...
+    if (filedesc >= 0) // If there was no error opening the text file...
     {	
-        x->impulses = earplug_impulses;
-		post("warning: didn't find impulse reponse file 'earplug_data.txt', using defaults.\n") ;
-	} else {
-        post("let's try loading");
-        //x->impulses = getbytes(sizeof(t_float)*368*2*128);
+		post("[earplug~] found impulse reponse file, overriding defaults:") ;
+        post("let's try loading %s/earplug_data.txt", buff);
         fp = fdopen(filedesc, "r") ;  
         for (i = 0; i < 368; i++) 
         {
-            fprintf(stderr, "i%d ", i);
             while(fgetc(fp) != 10) ;
             for (j = 0 ; j < 128 ; j++) {
-                fprintf(stderr, "j%d ", j);
-                
-				fscanf(fp, "%f %f ", &x->impulses[i][0][j], &x->impulses[i][1][j]);
+				fscanf(fp, "%f %f ", &earplug_impulses[i][0][j], &earplug_impulses[i][1][j]);
             }
-            
         }
         fclose(fp) ;
     }
+    x->impulses = earplug_impulses;
     
     post("        earplug~: binaural filter with measured reponses\n") ;
     post("        elevation: -40 to 90 degrees. azimuth: 360") ;
