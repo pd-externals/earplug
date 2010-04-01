@@ -178,9 +178,9 @@ install-doc:
 		$(INSTALL_FILE) $(PDOBJECTS:.pd=-help.pd) \
 			$(DESTDIR)$(objectsdir)/$(LIBRARY_NAME)
 # this is the only bit not really handled well...
-	$(INSTALL_FILE) README $(DESTDIR)$(objectsdir)/$(LIBRARY_NAME)/README.txt
-	$(INSTALL_FILE) VERSION $(DESTDIR)$(objectsdir)/$(LIBRARY_NAME)/VERSION.txt
-	$(INSTALL_FILE) CHANGES $(DESTDIR)$(objectsdir)/$(LIBRARY_NAME)/CHANGES.txt
+#	$(INSTALL_FILE) README $(DESTDIR)$(objectsdir)/$(LIBRARY_NAME)/README.txt
+#	$(INSTALL_FILE) VERSION $(DESTDIR)$(objectsdir)/$(LIBRARY_NAME)/VERSION.txt
+#	$(INSTALL_FILE) CHANGES $(DESTDIR)$(objectsdir)/$(LIBRARY_NAME)/CHANGES.txt
 
 install-examples:
 	test ! -d examples || (\
