@@ -2,6 +2,7 @@
 /* based on KEMAR impulse measurement  */
 /* Pei Xiang, summer 2004              */
 /* Revised in Fall 2006 by Jorge Castellanos */
+/* Revised in Spring 2009 by Hans-Christoph Steiner to compile in the data file */
 
 #include <stdio.h>
 #include <math.h>
