@@ -1,7 +1,7 @@
 Source: pd-earplug
 Section: sound
 Priority: optional
-Maintainer: Paul Brossier <piem@debian.org>
+Maintainer: Hans-Christoph Steiner <hans@eds.org>
 Build-Depends: debhelper (>= 7.0.50~), puredata
 Standards-Version: 3.8.3
 Homepage: http://puredata.info
@@ -9,7 +9,7 @@ Homepage: http://puredata.info
 Package: pd-earplug
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, pd
-Description: realtime binaural filter based on KEMAR impulse measurement
+Description: binaural filter based on KEMAR impulse measurement for Pd
  earplug~ is a realtime binaural filter based on KEMAR impulse measurement.
  It allows you to spatialize a sound in realtime. It basically takes the KEMAR
  data set, and interpolates 366 locations where HRTF measurement exists in a
