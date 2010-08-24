@@ -1,5 +1,6 @@
 #!/usr/bin/make -f
 
+LIBRARY_NAME = earplug~
 PACKAGE = pd-earplug
 pkglibdir = /usr/lib/pd/extra
 
@@ -12,6 +13,6 @@ override_dh_auto_install:
 	rm -f -- $(CURDIR)/debian/$(PACKAGE)/$(pkglibdir)/$(LIBRARY_NAME)/LICENSE.txt
 
 override_dh_shlibdeps:
-	dpkg-shlibdeps $(CURDIR)/debian/$(PACKAGE)$(pkglibdir)/earplug~/*.pd_linux \
+	dpkg-shlibdeps $(CURDIR)/debian/$(PACKAGE)$(pkglibdir)/$(LIBRARY_NAME)/*.pd_linux \
 		-T$(CURDIR)/debian/$(PACKAGE).substvars
 
