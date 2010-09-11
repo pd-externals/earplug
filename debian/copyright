@@ -1,3 +1,6 @@
+Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?rev=135
+Name: earplug~
+Source: http://sourceforge.net/projects/pure-data/files/libraries/earplug~/earplug~-0.2.tar.gz
 Debianized-By: Hans-Christoph Steiner <hans@eds.org> 
 Debianized-Date: Sat, 3 Apr 2010 17:14:25 -0400
 Files: *

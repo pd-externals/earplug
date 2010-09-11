@@ -5,5 +5,5 @@
 #X text 10 50 AUTHOR Pei Xiang;
 #X text 10 70 DESCRIPTION filters for binaural audio spatialization based on KEMAR impulse measurement;
 #X text 10 90 LICENSE ;
-#X text 10 110 VERSION 0.2.1-svn;
+#X text 10 110 VERSION 0.2;
 #X restore 10 10 pd META;
