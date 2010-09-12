@@ -5,7 +5,7 @@ PACKAGE = pd-earplug
 pkglibdir = /usr/lib/pd/extra
 
 %:
-	dh --with quilt $@
+	dh $@
 
 override_dh_auto_install:
 	make DESTDIR=$(CURDIR)/debian/$(PACKAGE) pkglibdir=$(pkglibdir) install
