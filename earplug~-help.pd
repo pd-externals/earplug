@@ -71,7 +71,7 @@ filter effects. Fitler could be DSP intensive due to convolution.;
 #X text 226 253 for testing:;
 #X obj 218 323 *~ 0;
 #X msg 532 124 read -resize \$1 table;
-#X msg 541 163 read -resize ../../sound/voice.wav table;
+#X msg 541 163 read -resize ../../doc/sound/voice.wav table;
 #X obj 330 247 hsl 128 15 0 360 0 0 empty empty empty -2 -8 0 10 -262130
 -1 -1 0 1;
 #X obj 331 339 hsl 128 15 -40 90 0 1 empty empty empty -2 -8 0 10 -262130
