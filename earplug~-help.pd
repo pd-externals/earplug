@@ -1,4 +1,4 @@
-#N canvas 0 26 822 649 10;
+#N canvas 4 79 822 649 10;
 #X msg 644 335 \; pd dsp 1;
 #X msg 329 431 0 \, 360 5000;
 #X obj 122 572 earplug~ 270 -25;
@@ -23,14 +23,14 @@
 #X coords 0 1 100 -1 120 20 1 200 195;
 #X restore 532 29 graph;
 #X msg 723 335 \; pd dsp 0;
-#X text 24 18 earplug~ - convolution binaural filter;
-#X text 23 49 This filter utilizes HRTF measurements (compact set)
+#X text 24 8 earplug~ - convolution binaural filter;
+#X text 23 39 This filter utilizes HRTF measurements (compact set)
 of KEMAR Dummy-Head Microphone (http://sound.media.mit.edu/KEMAR.html)
 ;
 #X obj 532 186 soundfiler;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array table 23376 float 0;
-#X coords 0 1 23375 -1 100 60 1;
+#X array table 62079 float 0;
+#X coords 0 1 62078 -1 100 60 1;
 #X restore 657 252 graph;
 #X obj 122 323 tabplay~ table;
 #X obj 327 309 line 0 1;
@@ -44,9 +44,8 @@ of KEMAR Dummy-Head Microphone (http://sound.media.mit.edu/KEMAR.html)
 #X text 646 371 audio on;
 #X obj 120 206 tabplay~ table;
 #X obj 120 236 dac~;
-#X text 27 89 The impulse response data "earplug_data.txt" must be
-in the same path as this external. Must use headphone to hear effective
-filter effects. Fitler could be DSP intensive due to convolution.;
+#X text 24 83 You must use headphones to hear effective filter effects.
+This filter could be DSP intensive due to convolution.;
 #X msg 164 181 stop;
 #X text 11 237 original --->;
 #X obj 122 599 dac~ 1 2;
@@ -90,6 +89,9 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 12 125 OUTLET_0 signal;
 #X text 12 145 OUTLET_1 signal;
 #X restore 763 618 pd META;
+#X text 24 113 You can override the built-in impulse used in the calculation
+by putting them in a file called "earplug_text.txt" in the same folder
+as this object.;
 #X connect 1 0 18 0;
 #X connect 2 0 25 0;
 #X connect 2 1 25 1;
