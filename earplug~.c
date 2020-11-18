@@ -1,14 +1,15 @@
 /* RT binaural filter: earplug~        */
 /* based on KEMAR impulse measurement  */
 /* Pei Xiang, summer 2004              */
-/* Revised in Fall 2006 by Jorge Castellanos */
-/* Revised in Spring 2009 by Hans-Christoph Steiner to compile in the data file */
+/* Revised in fall 2006 by Jorge Castellanos */
+/* Revised in spring 2009 by Hans-Christoph Steiner to compile in the data file */
+/* Brought to GitHub in fall 2020 by Dan Wilcox */
 
 #include <stdio.h>
 #include <math.h>
 #include "m_pd.h"
 #include "earplug~.h"
-#ifdef _MSC_VER /* Thes pragmas only apply to Microsoft's compiler */
+#ifdef _MSC_VER /* These pragmas only apply to Microsoft's compiler */
 #pragma warning( disable : 4244 )
 #pragma warning( disable : 4305 )
 #endif

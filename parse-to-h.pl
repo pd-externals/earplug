@@ -1,4 +1,8 @@
-#!/usr/bin/perl -w
+#! /usr/bin/perl -w
+#
+# convert KEMAR head-related impulse response measurement data set to
+# header file 3 dimensional array
+#
 
 $DATAFILE = "earplug_data.txt";
 open(DATAFILE);

@@ -1,14 +1,57 @@
-/* RT binaural filter: earplug~        */
-/* based on KEMAR impulse measurement  */
-/* Pei Xiang, summer 2004              */
-/* Revised in Fall 2006 by Jorge Castellanos */
-/* Revised in Spring 2009 by Hans-Christoph Steiner to compile in the data file */
+# earplug~
 
-http://markmail.org/message/sxfauaymftshbgwz
+RT binaural filter (HRTF) based on KEMAR impulse measurement
+
+Pei Xiang, summer 2004  
+Revised in fall 2006 by Jorge Castellanos  
+Revised in spring 2009 by Hans-Christoph Steiner to compile in the data file  
+Brought to GitHub in fall 2020 by Dan Wilcox
+
+## Build & Usage
+
+This is a pure C external and can be compiled simply with:
+
+    make
+
+To load this external in Pd, include the directory containing the following files
+in your Pd search paths:
+
+* earplug~.pd_*: compiled external
+* earplug~-help.pd: help file
+* earplug_data.txt: KEMAR data set
+
+By default, earplug~ will load the HRTF data set found in earplug_data.txt
+located in the same directory. If this file is not found, earplug~ will use an
+internal copy copiled into the object. To use your own dataset, 
+
+## Background
+
+http://markmail.org/message/sxfauaymftshbgwz  
 http://lists.puredata.info/pipermail/pd-list/2005-02/025764.html
 
-actually i've just written one external that handles this , [earplug~] http://crca.ucsd.edu/~pxiang/research.htm it basically takes the KEMAR data set, and interpolates 366 locations where HRTF measurement exists in a spherical surface. you get azimuth control 0-360 and elevation -40 - 90.
+On Jan 31, 2005, at 5:05 PM, Pei Xiang wrote:
 
-now i'm still trying to clean it up a little bit, but probably have to use by copy the data.txt file into the default search dir of Pd, for the moment.
-
-cheers, Pei 
+> hey, marc,
+> actually i've just written one external that handles this, [earplug~]
+> http://crca.ucsd.edu/~pxiang/research.htm it basically takes the KEMAR data
+> set, and interpolates 366 locations where HRTF measurement exists in a
+> spherical surface. you get azimuth control 0-360 and elevation -40 - 90.
+>
+> now i'm still trying to clean it up a little bit, but probably have to use by
+> copy the data.txt file into the default search dir of Pd, for the moment.
+>
+> cheers, Pei 
+>
+>
+> --- metafor <metafor at gmx.net> wrote:
+>
+>> just wondering, is there a puredata object or
+>> abstraction
+>> existing for the "head  related transfer function"?
+>>
+>> or other externals which work with spcacialisation
+>> of sounds,
+>> preferably for headphones.
+>>
+>> thanks
+>> marc
