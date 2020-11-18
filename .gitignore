@@ -1,0 +1,10 @@
+# pd
+*.pd_linux
+*.pd_darwin
+*.dll
+*.o
+*.so
+*.dylib
+
+# macOS
+.DS_Store
