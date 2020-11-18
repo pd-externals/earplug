@@ -7,11 +7,13 @@ Revised in fall 2006 by Jorge Castellanos
 Revised in spring 2009 by Hans-Christoph Steiner to compile in the data file  
 Brought to GitHub in fall 2020 by Dan Wilcox
 
-## Build & Usage
+## Build
 
 This is a pure C external and can be compiled simply with:
 
     make
+
+## Usage
 
 To load this external in Pd, include the directory containing the following files
 in your Pd search paths:
@@ -20,9 +22,18 @@ in your Pd search paths:
 * earplug~-help.pd: help file
 * earplug_data.txt: KEMAR data set
 
+### HRIR Data Set
+
 By default, earplug~ will load the HRTF data set found in earplug_data.txt
-located in the same directory. If this file is not found, earplug~ will use an
-internal copy copiled into the object. To use your own dataset, 
+located in the same directory as the external or the calling patch. If this file
+is not found, earplug~ will use an internal copy compiled into the object. This
+data set basically describes the "ear model" that is used by the convolution
+algorithm to filter the audio.
+
+To use your own ear model, you need an HRTF data set prepared as a 3D array of
+368x2x128 float values. See the format of earplug_data.txt as basis for making
+your own file and is based on the compact set of measurements of the KEMAR
+Dummy-Head Microphone from https://sound.media.mit.edu/resources/KEMAR.html.
 
 ## Background
 

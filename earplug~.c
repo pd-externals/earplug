@@ -201,8 +201,8 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
     filedesc = open_via_path(canvasdir->s_name, "earplug_data.txt", "", buff, &bufptr, 1024, 0);
     if (filedesc >= 0) /* if there was no error opening the text file... */
     {   
-        post("[earplug~] found impulse reponse file, overriding defaults:");
-        post("let's try loading %s/earplug_data.txt", buff);
+        verbose(1, "[earplug~] found impulse reponse file, overriding defaults:");
+        verbose(1, "let's try loading %s/earplug_data.txt", buff);
         fp = fdopen(filedesc, "r") ;  
         for (i = 0; i < 368; i++) 
         {
@@ -217,9 +217,9 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
     }
     x->impulses = earplug_impulses;
 
-    post("        earplug~: binaural filter with measured reponses\n") ;
-    post("        elevation: -40 to 90 degrees. azimuth: 360") ;
-    post("        dont let blocksize > 8192\n"); 
+    verbose(1, "        earplug~: binaural filter with measured reponses\n") ;
+    verbose(1, "        elevation: -40 to 90 degrees. azimuth: 360") ;
+    verbose(1, "        dont let blocksize > 8192\n"); 
 
     for (i = 0; i < 128 ; i++)
     {
