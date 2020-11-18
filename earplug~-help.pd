@@ -62,15 +62,15 @@ This filter could be DSP intensive due to convolution., f 72;
 -1;
 #X text 513 72 <- open a soundfile;
 #X obj 218 287 noise~;
-#X obj 239 315 tgl 15 0 empty empty empty 17 7 0 10 -204786 -1 -1 0
+#X obj 239 315 tgl 15 0 empty empty empty 17 7 0 10 -204786 -1 -1 1
 1;
 #X text 226 265 for testing:;
 #X obj 218 335 *~ 0;
 #X msg 492 114 read -resize \$1 table;
 #X obj 330 246 hsl 128 15 0 360 0 0 empty empty empty -2 -8 0 10 -262130
--1 -1 0 1;
+-1 -1 7100 1;
 #X obj 331 337 hsl 128 15 -40 90 0 1 empty empty empty -2 -8 0 10 -262130
--1 -1 11400 0;
+-1 -1 11100 0;
 #N canvas 306 231 494 344 META 0;
 #X text 12 185 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
 to conform to the PDDP template for Pd version 0.42.;
@@ -84,12 +84,14 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 12 125 OUTLET_0 signal;
 #X text 12 145 OUTLET_1 signal;
 #X restore 724 598 pd META;
-#X text 23 106 You can override the built-in impulse used in the calculation
-by putting them in a file called "earplug_text.txt" in the same folder
-as this object., f 72;
 #X text 23 39 This filter utilizes HRTF measurements (compact set)
 of KEMAR Dummy-Head Microphone (https://sound.media.mit.edu/resources/KEMAR.html)
 , f 72;
+#X text 23 105 You can override the built-in impulses used in the calculation
+by putting them in a file called "earplug_data.txt" in the same folder
+as the earplug~ external or the patch using the earplug object. See
+the "earplug_data_src.txt" as an example of the default data set.,
+f 72;
 #X connect 1 0 17 0;
 #X connect 2 0 24 0;
 #X connect 2 1 24 1;

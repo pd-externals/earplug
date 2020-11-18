@@ -20,20 +20,22 @@ in your Pd search paths:
 
 * earplug~.pd_*: compiled external
 * earplug~-help.pd: help file
-* earplug_data.txt: KEMAR data set
+* earplug_data.txt: KEMAR data set (optional, see below)
 
 ### HRIR Data Set
 
-By default, earplug~ will load the HRTF data set found in earplug_data.txt
-located in the same directory as the external or the calling patch. If this file
-is not found, earplug~ will use an internal copy compiled into the object. This
-data set basically describes the "ear model" that is used by the convolution
-algorithm to filter the audio.
+On creation, earplug~ will try to load an HRTF impulse response data set found
+in a "earplug_data.txt" file located in the same directory as the external or the
+calling patch. If this file is not found, earplug~ will use an default data set
+compiled into the object. This impulse reset set basically describes the
+"ear model" that is used by the convolution algorithm to filter the audio.
 
 To use your own ear model, you need an HRTF data set prepared as a 3D array of
-368x2x128 float values. See the format of earplug_data.txt as basis for making
-your own file and is based on the compact set of measurements of the KEMAR
-Dummy-Head Microphone from https://sound.media.mit.edu/resources/KEMAR.html.
+368x2x128 float values. See the format of earplug_data_src.txt as a basis for
+making your own file and is based on the compact set of measurements of the
+KEMAR Dummy-Head Microphone from:
+
+    https://sound.media.mit.edu/resources/KEMAR.html
 
 ## Background
 

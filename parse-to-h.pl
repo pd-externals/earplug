@@ -4,7 +4,7 @@
 # header file 3 dimensional array
 #
 
-$DATAFILE = "earplug_data.txt";
+$DATAFILE = "earplug_data_src.txt";
 open(DATAFILE);
 #368
 for ($i = 0; $i < 368; $i++) {
