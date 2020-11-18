@@ -6,8 +6,11 @@
 /* Brought to GitHub in fall 2020 by Dan Wilcox */
 
 #include "earplug~.h"
-#include <stdio.h>
 #include <math.h>
+#include <string.h>
+#include <errno.h>
+
+#define VERSION "0.2.2"
 
 /* these pragmas only apply to Microsoft's compiler */
 #ifdef _MSC_VER
@@ -195,33 +198,39 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
     int i, j;
     FILE *fp;
     t_symbol *canvasdir = canvas_getdir(canvas_getcurrent());
-    char buff[1024], *bufptr;
+    char buff[MAXPDSTRING], *bufptr;
     int filedesc;
 
-    filedesc = open_via_path(canvasdir->s_name, "earplug_data.txt", "", buff, &bufptr, 1024, 0);
+    filedesc = open_via_path(canvasdir->s_name, "earplug_data.txt", "", buff, &bufptr, MAXPDSTRING, 0);
     if (filedesc >= 0) /* if there was no error opening the text file... */
-    {   
-        verbose(1, "[earplug~] found impulse reponse file, overriding defaults:");
-        verbose(1, "let's try loading %s/earplug_data.txt", buff);
-        fp = fdopen(filedesc, "r") ;  
+    {
+        int ret;
+        fp = fdopen(filedesc, "r");
         for (i = 0; i < 368; i++) 
         {
-            while(fgetc(fp) != 10) ;
-            for (j = 0 ; j < 128 ; j++)
+            do {ret = fgetc(fp);}
+            while (ret != 10 && ret != EOF);
+            if (ret != EOF)
             {
-                fscanf(fp, "%f %f ", &earplug_impulses[i][0][j],
-                                     &earplug_impulses[i][1][j]);
+                for (j = 0; j < 128; j++)
+                {
+                    ret = fscanf(fp, "%f %f ", &earplug_impulses[i][0][j],
+                                               &earplug_impulses[i][1][j]);
+                    if (ret == EOF) {break;}
+                }
+            }
+            if (ret == EOF)
+            {
+                pd_error(x, "earplug~: could not load %s/earplug_data.txt, check format?", buff);
+                break;
             }
         }
-        fclose(fp) ;
+        fclose(fp);
+        if (ret != EOF) {logpost(x, 3, "earplug~: loaded %s/earplug_data.txt", buff);}
     }
     x->impulses = earplug_impulses;
 
-    verbose(1, "        earplug~: binaural filter with measured reponses\n") ;
-    verbose(1, "        elevation: -40 to 90 degrees. azimuth: 360") ;
-    verbose(1, "        dont let blocksize > 8192\n"); 
-
-    for (i = 0; i < 128 ; i++)
+    for (i = 0; i < 128; i++)
     {
          x->convBuffer[i] = 0; 
          x->previousImpulse[0][i] = 0; 
@@ -230,12 +239,12 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
 
     x->bufferPin = 0;
 
-    for (i = 0; i < 8192 ; i++)
+    for (i = 0; i < 8192; i++)
     {   
         x->crossCoef[i] = 1.0 * i / 8192;
     }
 
-    /* This is the scaling factor for the azimuth so that it
+    /* this is the scaling factor for the azimuth so that it
        corresponds to an HRTF in the KEMAR database */
     x->azimScale[0] = x->azimScale[8] = 0.153846153;   /* -40 and 40 degree */
     x->azimScale[1] = x->azimScale[7] = 0.166666666;   /* -30 and 30 degree */
@@ -271,4 +280,8 @@ void earplug_tilde_setup(void)
     CLASS_MAINSIGNALIN(earplug_class, t_earplug, f);
 
     class_addmethod(earplug_class, (t_method)earplug_dsp, gensym("dsp"), 0);
+
+    post("earplug~ %s: binaural filter with measured reponses", VERSION);
+    post("    elevation: -40 to 90 degrees, azimuth: 360 degrees");
+    post("    do not use a blocksize > 8192");
 }
