@@ -38,14 +38,14 @@ typedef struct _earplug
      
     t_float crossCoef[8192];
     t_float azimScale[13];
-    t_int azimOffset[13];
+    unsigned int azimOffset[13];
 
     t_float previousImpulse[2][128];
     t_float currentImpulse[2][128];
     t_float convBuffer[128];
     t_float (*impulses)[2][128];     /* a 3D array of 368x2x128 */
     t_float f;                       /* dummy float for dsp */
-    t_int bufferPin;
+    int bufferPin;
 } t_earplug;
 
 static t_int *earplug_perform(t_int *w)
