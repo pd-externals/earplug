@@ -9,10 +9,11 @@ Updated in fall 2020 by Dan Wilcox
 
 ## Description
 
-earplug~ is a realtime binaural filter based on KEMAR impulse measurement which
-allows you to spatialize a sound in realtime. It basically takes the KEMAR data
-set, and interpolates 366 locations where HRTF measurement exists in a spherical
-surface. You get azimuth control 0 - 360 dgrees and elevation -40 - 90 degrees.
+earplug~ is a binaural filter based on KEMAR impulse measurement which
+allows you to spatialize a sound in realtime. It basically takes the KEMAR dummy
+head data set, and interpolates 366 locations where HRTF measurement exists in a
+spherical surface. You get azimuth control 0 - 360 dgrees and elevation -40 - 90
+degrees.
 
 ## Build
 
@@ -40,7 +41,7 @@ compiled into the object. This impulse reset set basically describes the
 To use your own ear model, you need an HRTF data set prepared as a 3D array of
 368x2x128 float values. See the format of earplug_data_src.txt as a basis for
 making your own file and is based on the compact set of measurements of the
-KEMAR Dummy-Head Microphone from:
+KEMAR dummy head microphone from:
 
     https://sound.media.mit.edu/resources/KEMAR.html
 
