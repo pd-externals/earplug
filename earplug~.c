@@ -20,8 +20,8 @@
 
 /* elevation degree:      -40  -30  -20  -10   0   10  20  30  40  50  60  70  80  90 */
 /* index array:             0    1    2    3   4    5   6   7   8   9  10  11  12  13 */
-/* impulse reponse number: 29   31   37   37  37   37  37  31  29  23  19  13   7   1 */ 
-/* 0 degree reponse index:  0   29   60   97 134  171 208 245 276 305 328 347 360 367 */
+/* impulse response number: 29   31   37   37  37   37  37  31  29  23  19  13   7   1 */ 
+/* 0 degree response index:  0   29   60   97 134  171 208 245 276 305 328 347 360 367 */
 
 static t_class *earplug_class;
 
@@ -281,7 +281,7 @@ void earplug_tilde_setup(void)
 
     class_addmethod(earplug_class, (t_method)earplug_dsp, gensym("dsp"), 0);
 
-    post("earplug~ %s: binaural filter with measured reponses", VERSION);
+    post("earplug~ %s: binaural filter with measured responses", VERSION);
     post("    elevation: -40 to 90 degrees, azimuth: 360 degrees");
     post("    do not use a blocksize > 8192");
 }
