@@ -1,11 +1,18 @@
 # earplug~
 
-RT binaural filter (HRTF) based on KEMAR impulse measurement
+Realtime binaural filter (HRTF) based on KEMAR impulse measurement
 
 Pei Xiang, summer 2004  
 Revised in fall 2006 by Jorge Castellanos  
 Revised in spring 2009 by Hans-Christoph Steiner to compile in the data file  
 Updated in fall 2020 by Dan Wilcox
+
+## Description
+
+earplug~ is a realtime binaural filter based on KEMAR impulse measurement which
+allows you to spatialize a sound in realtime. It basically takes the KEMAR data
+set, and interpolates 366 locations where HRTF measurement exists in a spherical
+surface. You get azimuth control 0 - 360 dgrees and elevation -40 - 90 degrees.
 
 ## Build
 
