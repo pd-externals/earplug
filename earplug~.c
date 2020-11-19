@@ -3,7 +3,7 @@
 /* Pei Xiang, summer 2004              */
 /* Revised in fall 2006 by Jorge Castellanos */
 /* Revised in spring 2009 by Hans-Christoph Steiner to compile in the data file */
-/* Brought to GitHub in fall 2020 by Dan Wilcox */
+/* Updated in fall 2020 by Dan Wilcox */
 
 #include "earplug~.h"
 #include <math.h>
