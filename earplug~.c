@@ -20,8 +20,8 @@
 
 /* elevation degree:      -40  -30  -20  -10   0   10  20  30  40  50  60  70  80  90 */
 /* index array:             0    1    2    3   4    5   6   7   8   9  10  11  12  13 */
-/* impulse reponse number: 29   31   37   37  37   37  37  31  29  23  19  13   7   1 */ 
-/* 0 degree reponse index:  0   29   60   97 134  171 208 245 276 305 328 347 360 367 */
+/* impulse response number: 29   31   37   37  37   37  37  31  29  23  19  13   7   1 */ 
+/* 0 degree response index:  0   29   60   97 134  171 208 245 276 305 328 347 360 367 */
 
 static t_class *earplug_class;
 
@@ -38,14 +38,14 @@ typedef struct _earplug
      
     t_float crossCoef[8192];
     t_float azimScale[13];
-    t_int azimOffset[13];
+    unsigned int azimOffset[13];
 
     t_float previousImpulse[2][128];
     t_float currentImpulse[2][128];
     t_float convBuffer[128];
     t_float (*impulses)[2][128];     /* a 3D array of 368x2x128 */
     t_float f;                       /* dummy float for dsp */
-    t_int bufferPin;
+    int bufferPin;
 } t_earplug;
 
 static t_int *earplug_perform(t_int *w)
@@ -279,9 +279,9 @@ void earplug_tilde_setup(void)
 
     CLASS_MAINSIGNALIN(earplug_class, t_earplug, f);
 
-    class_addmethod(earplug_class, (t_method)earplug_dsp, gensym("dsp"), 0);
+    class_addmethod(earplug_class, (t_method)earplug_dsp, gensym("dsp"), A_CANT, 0);
 
-    post("earplug~ %s: binaural filter with measured reponses", VERSION);
+    post("earplug~ %s: binaural filter with measured responses", VERSION);
     post("    elevation: -40 to 90 degrees, azimuth: 360 degrees");
     post("    do not use a blocksize > 8192");
 }
