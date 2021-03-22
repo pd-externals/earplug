@@ -28,7 +28,7 @@ in your Pd search paths:
 
 * earplug~.pd_*: compiled external
 * earplug~-help.pd: help file
-* earplug_data.txt: KEMAR data set (optional, see below)
+* earplug_data_src.txt: KEMAR data set (optional, see below)
 
 ### HRIR Data Set
 
