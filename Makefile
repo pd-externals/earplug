@@ -2,7 +2,8 @@
 
 lib.name = earplug~
 
-class.sources = earplug~.c
+cflags = -I./conv
+class.sources = earplug~.c conv/convolution.c conv/fft-dif.c conv/ift-dif.c
 
 datafiles = earplug~-help.pd earplug~-meta.pd earplug_data_src.txt \
             parse-to-h.pl README.txt LICENSE.txt
