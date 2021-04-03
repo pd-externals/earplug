@@ -2,22 +2,44 @@
 #include "fft.h"
 #include "ift.h"
 
-void complexMultiplication(float complex* sample, float complex* ir, int size)
+void copyToComplex(float* buffer, int size, float complex* complexBuffer)
 {
-    while(size--)
-        *sample++ *= *ir++;
+	for(int i = 0; i < size; ++i)
+		complexBuffer[i] = buffer[i];
 }
 
-void convolve(float complex* sample, float complex* ir, int size)
+void copyFromComplex(float complex* complexBuffer, int size, float* buffer)
 {
-	fft(sample, size);
-	fft(ir, size);
-    complexMultiplication(sample, ir, size);
-    ift(sample, size);
+	for(int i = 0; i < size; ++i)
+		buffer[i] = creal(complexBuffer[i]);
 }
 
-void clean(float complex* buffer, int size)
+void convolve(float* sample, int size, float* ir, float* result)
 {
-	while(size--)
-		*buffer++ = 0.f + 0.fI;
+	// fft ir filter
+	float complex complexIr[128] = {0.f};
+	copyToComplex(ir, 128, complexIr);
+	fft(complexIr, 128);
+
+	float complex complexResult[128] = {0.f};
+	int remainingSamples = size;
+
+	do
+	{
+		float complex complexSample[128] = {0.f};
+		int samplesToBeCopied = remainingSamples > 128 ? 128 : remainingSamples; 
+		copyToComplex(sample, samplesToBeCopied, complexSample);
+		fft(complexSample, 128);
+
+		for(int i = 0; i < 128; ++i)
+    	    complexResult[i] = complexSample[i] * complexIr[i];
+
+	    ift(complexResult, 128);
+    	copyFromComplex(complexResult, samplesToBeCopied, result);
+
+		remainingSamples -= 128;
+		sample += 128;
+		result += 128;
+	}while(remainingSamples > 0);
+
 }
