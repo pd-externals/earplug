@@ -5,10 +5,13 @@
 /* Revised in spring 2009 by Hans-Christoph Steiner to compile in the data file */
 /* Updated in fall 2020 by Dan Wilcox */
 
-#include "earplug~.h"
 #include <math.h>
 #include <string.h>
 #include <errno.h>
+#include <complex.h>
+
+#include "earplug~.h"
+#include "convolution.h"
 
 #define VERSION "0.2.2"
 
@@ -36,6 +39,9 @@ typedef struct _earplug
     t_float azi;
     t_float ele;
      
+    t_float inputBuffer[8192];
+    t_float outputBuffer[2][8192];
+
     t_float crossCoef[8192];
     t_float azimScale[13];
     unsigned int azimOffset[13];
@@ -47,6 +53,12 @@ typedef struct _earplug
     t_float f;                       /* dummy float for dsp */
     int bufferPin;
 } t_earplug;
+
+void copy(float* source, float* dist, int size)
+{
+    for(int i = 0; i < size; ++i)
+        *dist++ = *source++;
+}
 
 static t_int *earplug_perform(t_int *w)
 {
@@ -143,39 +155,38 @@ static t_int *earplug_perform(t_int *w)
         }
     }
 
-    float inSample;
-    float convSum[2]; /* to accumulate the sum during convolution */
-    int blockScale = 8192 / blocksize;
+    convolve(in, blocksize, x->currentImpulse[0], left_out);
+    convolve(in, blocksize, x->currentImpulse[1], right_out);
 
     /* convolve the interpolated HRIRs (left and right) with the input signal */
-    while (blocksize--)
-    {
-        convSum[0] = 0; 
-        convSum[1] = 0; 
-
-        inSample = *(in++);
-
-        x->convBuffer[x->bufferPin] = inSample;
-        unsigned scaledBlocksize = blocksize * blockScale;
-        unsigned blocksizeDelta = 8191 - scaledBlocksize;
-        for (i = 0; i < 128; i++)
-        { 
-            convSum[0] += (x->previousImpulse[0][i] * x->crossCoef[blocksizeDelta] + 
-                            x->currentImpulse[0][i] * x->crossCoef[scaledBlocksize]) *
-                            x->convBuffer[(x->bufferPin - i) &127];
-                            
-            convSum[1] += (x->previousImpulse[1][i] * x->crossCoef[blocksizeDelta] +
-                            x->currentImpulse[1][i] * x->crossCoef[scaledBlocksize]) *
-                            x->convBuffer[(x->bufferPin - i) &127];
-
-            x->previousImpulse[0][i] = x->currentImpulse[0][i];
-            x->previousImpulse[1][i] = x->currentImpulse[1][i];
-        }   
-        x->bufferPin = (x->bufferPin + 1) & 127;
-
-        *left_out++ = convSum[0];
-        *right_out++ = convSum[1];
-    }
+//    while (blocksize--)
+//    {
+//        convSum[0] = 0;
+//        convSum[1] = 0;
+//
+//        inSample = *(in++);
+//
+//        x->convBuffer[x->bufferPin] = inSample;
+//        unsigned scaledBlocksize = blocksize * blockScale;
+//        unsigned blocksizeDelta = 8191 - scaledBlocksize;
+//        for (i = 0; i < 128; i++)
+//        {
+//            convSum[0] += (x->previousImpulse[0][i] * x->crossCoef[blocksizeDelta] +
+//                            x->currentImpulse[0][i] * x->crossCoef[scaledBlocksize]) *
+//                            x->convBuffer[(x->bufferPin - i) &127];
+//
+//            convSum[1] += (x->previousImpulse[1][i] * x->crossCoef[blocksizeDelta] +
+//                            x->currentImpulse[1][i] * x->crossCoef[scaledBlocksize]) *
+//                            x->convBuffer[(x->bufferPin - i) &127];
+//
+//            x->previousImpulse[0][i] = x->currentImpulse[0][i];
+//            x->previousImpulse[1][i] = x->currentImpulse[1][i];
+//        }
+//        x->bufferPin = (x->bufferPin + 1) & 127;
+//
+//        *left_out++ = convSum[0];
+//        *right_out++ = convSum[1];
+//    }
     return w + 6;
 }
 
