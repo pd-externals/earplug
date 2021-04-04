@@ -2,6 +2,9 @@
 
 lib.name = earplug~
 
+# remove this flag when you don't want to embed the IR data in the exteral itself
+cflags = -D EMBED_DEFAULT_IR
+
 class.sources = earplug~.c
 
 datafiles = earplug~-help.pd earplug~-meta.pd earplug_data_src.txt \

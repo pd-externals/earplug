@@ -6,6 +6,7 @@
 /* Updated in fall 2020 by Dan Wilcox */
 
 #include "earplug~.h"
+
 #include <math.h>
 #include <string.h>
 #include <errno.h>
@@ -205,10 +206,7 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
     filedesc = open_via_path(canvasdir->s_name, "earplug_data.txt", "", buff, &bufptr, MAXPDSTRING, 0);
     if (filedesc >= 0) /* if there was no error opening the text file... */
     {
-
         int ret;
-        t_float file_impulses[368][2][128];
-
         fp = fdopen(filedesc, "r");
         for (i = 0; i < 368; i++) 
         {
@@ -218,8 +216,8 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
             {
                 for (j = 0; j < 128; j++)
                 {
-                    ret = fscanf(fp, "%f %f ", &file_impulses[i][0][j],
-                                               &file_impulses[i][1][j]);
+                    ret = fscanf(fp, "%f %f ", &earplug_impulses[i][0][j],
+                                               &earplug_impulses[i][1][j]);
                     if (ret == EOF) {break;}
                 }
             }
