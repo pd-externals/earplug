@@ -36,12 +36,10 @@ typedef struct _earplug
     t_float azi;
     t_float ele;
      
-    t_float crossCoef[8192];
     t_float azimScale[13];
     unsigned int azimOffset[13];
 
-    t_float previousImpulse[2][128];
-    t_float currentImpulse[2][128];
+    t_float ir[2][128];
     t_float convBuffer[128];
     t_float (*impulses)[2][128];     /* a 3D array of 368x2x128 */
     t_float f;                       /* dummy float for dsp */
@@ -103,14 +101,14 @@ static t_int *earplug_perform(t_int *w)
         {
             /* elevFracDown: interpolate the lower two HRIRs and multiply them by their "fraction"
                  elevFracUp: interpolate the upper two HRIRs and multiply them by their "fraction" */
-            x->currentImpulse[ch_L][i] = elevFracDown *
+            x->ir[ch_L][i] = elevFracDown *
                                         (azimFracDown * x->impulses[lowerIdx][0][i] + 
                                         azimFracDownInv * x->impulses[lowerIdx + 1][0][i]) +
                                         elevFracUp *
                                         (azimFracUp * x->impulses[upperIdx][0][i] + 
                                         azimFracUpInv * x->impulses[upperIdx + 1][0][i]);
 
-            x->currentImpulse[ch_R][i] = elevFracDown *
+            x->ir[ch_R][i] = elevFracDown *
                                         (azimFracDown * x->impulses[lowerIdx][1][i] +
                                         azimFracDownInv * x->impulses[lowerIdx + 1][1][i]) +
                                         elevFracUp *
@@ -132,11 +130,11 @@ static t_int *earplug_perform(t_int *w)
         {
             /* elevFracDown: these two lines interpolate the lower two HRIRs
                  elevFracUp: multiply the 90 degree HRIR with its corresponding fraction */
-            x->currentImpulse[ch_L][i] = elevFracDown * 
+            x->ir[ch_L][i] = elevFracDown * 
                                         (azimFracDown * x->impulses[360+azimIntDown][0][i] +
                                         (1.0 - azimFracDown) * x->impulses[361+azimIntDown][0][i])
                                         + elevFracUp * x->impulses[367][0][i];
-            x->currentImpulse[ch_R][i] = elevFracDown * 
+            x->ir[ch_R][i] = elevFracDown * 
                                         (azimFracDown * x->impulses[360+azimIntDown][1][i]  +
                                         (1.0 - azimFracDown) * x->impulses[361+azimIntDown][1][i])
                                         + elevFracUp * x->impulses[367][1][i]; 
@@ -145,7 +143,6 @@ static t_int *earplug_perform(t_int *w)
 
     float inSample;
     float convSum[2]; /* to accumulate the sum during convolution */
-    int blockScale = 8192 / blocksize;
 
     /* convolve the interpolated HRIRs (left and right) with the input signal */
     while (blocksize--)
@@ -156,21 +153,12 @@ static t_int *earplug_perform(t_int *w)
         inSample = *(in++);
 
         x->convBuffer[x->bufferPin] = inSample;
-        unsigned scaledBlocksize = blocksize * blockScale;
-        unsigned blocksizeDelta = 8191 - scaledBlocksize;
         for (i = 0; i < 128; i++)
         { 
-            convSum[0] += (x->previousImpulse[0][i] * x->crossCoef[blocksizeDelta] + 
-                            x->currentImpulse[0][i] * x->crossCoef[scaledBlocksize]) *
-                            x->convBuffer[(x->bufferPin - i) &127];
-                            
-            convSum[1] += (x->previousImpulse[1][i] * x->crossCoef[blocksizeDelta] +
-                            x->currentImpulse[1][i] * x->crossCoef[scaledBlocksize]) *
-                            x->convBuffer[(x->bufferPin - i) &127];
-
-            x->previousImpulse[0][i] = x->currentImpulse[0][i];
-            x->previousImpulse[1][i] = x->currentImpulse[1][i];
+            convSum[0] += x->ir[0][i] * x->convBuffer[(x->bufferPin - i) &127];
+            convSum[1] += x->ir[1][i] * x->convBuffer[(x->bufferPin - i) &127];
         }   
+
         x->bufferPin = (x->bufferPin + 1) & 127;
 
         *left_out++ = convSum[0];
@@ -235,18 +223,8 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
     x->impulses = earplug_impulses;
 
     for (i = 0; i < 128; i++)
-    {
-         x->convBuffer[i] = 0; 
-         x->previousImpulse[0][i] = 0; 
-         x->previousImpulse[1][i] = 0;
-    }
-
+         x->convBuffer[i] = 0.f; 
     x->bufferPin = 0;
-
-    for (i = 0; i < 8192; i++)
-    {   
-        x->crossCoef[i] = 1.0 * i / 8192;
-    }
 
     /* this is the scaling factor for the azimuth so that it
        corresponds to an HRTF in the KEMAR database */
