@@ -18,8 +18,8 @@
 #pragma warning( disable : 4305 ) /* uncast const double to float */
 #endif
 
-/* elevation degree:      -40  -30  -20  -10   0   10  20  30  40  50  60  70  80  90 */
-/* index array:             0    1    2    3   4    5   6   7   8   9  10  11  12  13 */
+/* elevation degree:       -40  -30  -20  -10   0   10  20  30  40  50  60  70  80  90 */
+/* index array:              0    1    2    3   4    5   6   7   8   9  10  11  12  13 */
 /* impulse response number: 29   31   37   37  37   37  37  31  29  23  19  13   7   1 */ 
 /* 0 degree response index:  0   29   60   97 134  171 208 245 276 305 328 347 360 367 */
 
