@@ -12,7 +12,7 @@ Updated in fall 2020 by Dan Wilcox
 earplug~ is a binaural filter based on KEMAR impulse measurement which
 allows you to spatialize a sound in realtime. It basically takes the KEMAR dummy
 head data set, and interpolates 366 locations where HRTF measurement exists in a
-spherical surface. You get azimuth control 0 - 360 dgrees and elevation -40 - 90
+spherical surface. You get azimuth control 0 - 360 degrees and elevation -40 - 90
 degrees.
 
 ## Build
@@ -70,7 +70,7 @@ On Jan 31, 2005, at 5:05 PM, Pei Xiang wrote:
 >> abstraction
 >> existing for the "head  related transfer function"?
 >>
->> or other externals which work with spcacialisation
+>> or other externals which work with spacialisation
 >> of sounds,
 >> preferably for headphones.
 >>
