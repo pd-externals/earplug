@@ -26,10 +26,9 @@
 #X text 24 8 earplug~ - convolution binaural filter;
 #X obj 492 133 soundfiler;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array table 62079 float 0;
-#X coords 0 1 62078 -1 100 60 1;
+#X array ep-table 441000 float 0;
+#X coords 0 1 440999 -1 100 60 1 0 0;
 #X restore 634 244 graph;
-#X obj 122 335 tabplay~ table;
 #X obj 327 309 line 0 1;
 #X obj 327 286 pack 0 50;
 #X floatatom 328 357 5 0 0 0 - - -;
@@ -39,7 +38,6 @@
 #X obj 331 513 line 0 1;
 #X obj 329 456 line 0 50;
 #X text 637 371 audio on;
-#X obj 120 206 tabplay~ table;
 #X obj 120 236 dac~;
 #X msg 167 182 stop;
 #X text 20 237 original --->;
@@ -59,16 +57,15 @@
 #X obj 492 67 bng 15 250 50 0 empty empty empty 17 7 0 10 -204786 -1
 -1;
 #X text 513 67 <- open a soundfile;
-#X obj 218 287 noise~;
-#X obj 239 315 tgl 15 0 empty empty empty 17 7 0 10 -204786 -1 -1 0
+#X obj 238 287 noise~;
+#X obj 259 315 tgl 15 0 empty empty empty 17 7 0 10 -204786 -1 -1 0
 1;
-#X text 226 265 for testing:;
-#X obj 218 335 *~ 0;
-#X msg 492 109 read -resize \$1 table;
+#X text 223 265 for testing:;
+#X obj 238 335 *~ 0;
 #X obj 330 246 hsl 128 15 0 360 0 0 empty empty empty -2 -8 0 10 -262130
--1 -1 7000 1;
+-1 -1 3100 1;
 #X obj 331 337 hsl 128 15 -40 90 0 1 empty empty empty -2 -8 0 10 -262130
--1 -1 9800 0;
+-1 -1 1200 0;
 #N canvas 306 231 494 344 META 0;
 #X text 12 185 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
 to conform to the PDDP template for Pd version 0.42.;
@@ -91,31 +88,36 @@ This filter can be DSP intensive due to convolution., f 72;
 by putting them in a file called "earplug_data.txt" in the same directory
 as the parent patch. See "earplug_data.txt" as an example of the default
 data set., f 72;
-#X connect 1 0 17 0;
-#X connect 2 0 23 0;
-#X connect 2 1 23 1;
-#X connect 3 0 11 0;
-#X connect 9 0 2 0;
-#X connect 9 1 26 0;
-#X connect 10 0 2 1;
-#X connect 11 0 10 0;
-#X connect 12 0 14 0;
-#X connect 13 0 2 2;
-#X connect 14 0 13 0;
-#X connect 15 0 16 0;
+#X msg 492 109 read -resize \$1 ep-table;
+#X obj 120 206 tabplay~ ep-table;
+#X obj 122 335 tabplay~ ep-table;
+#X obj 238 357 *~ 0.5;
+#X connect 1 0 16 0;
+#X connect 2 0 21 0;
+#X connect 2 1 21 1;
+#X connect 3 0 10 0;
+#X connect 9 0 2 1;
+#X connect 10 0 9 0;
+#X connect 11 0 13 0;
+#X connect 12 0 2 2;
+#X connect 13 0 12 0;
+#X connect 14 0 15 0;
+#X connect 15 0 2 1;
 #X connect 16 0 2 1;
-#X connect 17 0 2 1;
-#X connect 19 0 20 0;
-#X connect 19 0 20 1;
-#X connect 21 0 19 0;
-#X connect 25 0 9 0;
-#X connect 26 0 9 0;
-#X connect 27 0 19 0;
-#X connect 35 0 42 0;
-#X connect 36 0 35 0;
-#X connect 38 0 41 0;
-#X connect 39 0 41 1;
-#X connect 41 0 2 0;
-#X connect 42 0 7 0;
-#X connect 43 0 3 0;
-#X connect 44 0 12 0;
+#X connect 19 0 47 0;
+#X connect 23 0 48 0;
+#X connect 24 0 48 0;
+#X connect 25 0 47 0;
+#X connect 33 0 46 0;
+#X connect 34 0 33 0;
+#X connect 36 0 39 0;
+#X connect 37 0 39 1;
+#X connect 39 0 49 0;
+#X connect 40 0 3 0;
+#X connect 41 0 11 0;
+#X connect 46 0 7 0;
+#X connect 47 0 18 0;
+#X connect 47 0 18 1;
+#X connect 48 0 2 0;
+#X connect 48 1 24 0;
+#X connect 49 0 2 0;
