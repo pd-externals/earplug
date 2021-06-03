@@ -3,12 +3,19 @@
 /* Pei Xiang, summer 2004              */
 /* Revised in fall 2006 by Jorge Castellanos */
 /* Revised in spring 2009 by Hans-Christoph Steiner to compile in the data file */
-/* Updated in fall 2020 by Dan Wilcox */
+/* Updated in 2020-2021 by Dan Wilcox & Chikashi Miyama */
 
-#include "earplug~.h"
+#include "m_pd.h"
 #include <math.h>
 #include <string.h>
 #include <errno.h>
+
+/* impulse response data */
+#ifdef EARPLUG_DATA_NO_EMBED
+t_float earplug_impulses[368][2][128] = {{{0.0f}}};
+#else
+#include "earplug_data.h"
+#endif
 
 #define VERSION "0.2.2"
 
@@ -18,8 +25,8 @@
 #pragma warning( disable : 4305 ) /* uncast const double to float */
 #endif
 
-/* elevation degree:      -40  -30  -20  -10   0   10  20  30  40  50  60  70  80  90 */
-/* index array:             0    1    2    3   4    5   6   7   8   9  10  11  12  13 */
+/* elevation degree:       -40  -30  -20  -10   0   10  20  30  40  50  60  70  80  90 */
+/* index array:              0    1    2    3   4    5   6   7   8   9  10  11  12  13 */
 /* impulse response number: 29   31   37   37  37   37  37  31  29  23  19  13   7   1 */ 
 /* 0 degree response index:  0   29   60   97 134  171 208 245 276 305 328 347 360 367 */
 
@@ -209,10 +216,7 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
     filedesc = open_via_path(canvasdir->s_name, "earplug_data.txt", "", buff, &bufptr, MAXPDSTRING, 0);
     if (filedesc >= 0) /* if there was no error opening the text file... */
     {
-
         int ret;
-        t_float file_impulses[368][2][128];
-
         fp = fdopen(filedesc, "r");
         for (i = 0; i < 368; i++) 
         {
@@ -222,8 +226,8 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
             {
                 for (j = 0; j < 128; j++)
                 {
-                    ret = fscanf(fp, "%f %f ", &file_impulses[i][0][j],
-                                               &file_impulses[i][1][j]);
+                    ret = fscanf(fp, "%f %f ", &earplug_impulses[i][0][j],
+                                               &earplug_impulses[i][1][j]);
                     if (ret == EOF) {break;}
                 }
             }

@@ -1,9 +1,26 @@
-src = open("../earplug_data_src.txt", "r")
-dest = open("../earplug~.h", "w")
+#! /usr/bin/env python3
+#
+# convert KEMAR head-related impulse response measurement data set to C header
+# file 3 dimensional array
+#
+# usage: parse-to-h.py [DATAFILE]
+#
+# Chikashi Miyama 2021
+# adapted from original parse-to-h.pl Perl script by Hans-Christoph Steiner 2009
+#
+
+import sys
+
+datafile = "earplug_data.txt"
+if len(sys.argv) > 1:
+    datafile = sys.argv[1]
+
+src = open(datafile, "r")
+dest = open("earplug.h", "w")
 
 lines = src.readlines()
 
-dest.write("#include \"m_pd.h\"\n")
+dest.write("/* default impulse responses as embedded binary data */\n")
 dest.write("t_float earplug_impulses[368][2][128] = {\n")
 for line in lines:
     if line[0] == "*":

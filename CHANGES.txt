@@ -1,0 +1,31 @@
+0.3.0
+
+* added EARPLUG_DATA_NO_EMBED define to optionally disable compiling IR data set
+
+* earplug~.h renamed to earplug_data.h as it only contains the default data set
+* replaced parse-to-h.pl with parse-to-h.py python script
+
+0.2.1: 21 Jan 2013
+
+* fixed -mcpu/-mtune flags breaking x86 build
+* added META subpatch
+* update help patch to say that earplug_data.txt is optional
+
+0.2.0: 13 Sep 2010
+
+* added license
+* various build system updates
+
+0.1.1: 09 Jun 2009
+
+* updated compiler export flags
+* impulse data now also embedded in external (Tymm Twillman)
+* improved help patch
+
+0.1.0: 25 Jan 2007
+
+initial commit to svn
+
+alpha: Summer 2004
+
+pre-svn
