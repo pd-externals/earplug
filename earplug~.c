@@ -38,10 +38,10 @@ typedef struct _earplug
     t_outlet *left_channel;
     t_outlet *right_channel;
 
-    t_float azimuth;                 /* from 0 to 360 degrees */
-    t_float elevation;               /* from -40 to 90 (degrees) */
     t_float azi;
     t_float ele;
+    unsigned ch_L;
+    unsigned ch_R;
      
     t_float crossCoef[8192];
     t_float azimScale[13];
@@ -62,31 +62,8 @@ static t_int *earplug_perform(t_int *w)
     t_float *right_out = (t_float *)(w[3]);
     t_float *left_out = (t_float *)(w[4]);
     int blocksize = (int)(w[5]);
+    unsigned i;
 
-    unsigned ch_L, ch_R, i;
-
-    x->azi = x->azimuth;
-    x->ele = x->elevation;
-
-    if (x->ele < -40)
-        x->ele = -40;
-    if (x->ele > 90)
-        x->ele = 90;
-    if (x->azi < 0 || x->azi > 360)
-        x->azi = 0;
-    if (x->azi <= 180)
-    {
-        ch_L = 0;
-        ch_R = 1;
-    }
-    else
-    { 
-        ch_L = 1;
-        ch_R = 0;
-        x->azi = 360.0 - x->azi;
-    }
-
-    x->ele *= 0.1; /* divided by 10 since each elevation is 10 degrees apart */
 
     if (x->ele < 8.0) /* if elevation is less than 80 degrees... */
     { 
@@ -110,14 +87,14 @@ static t_int *earplug_perform(t_int *w)
         {
             /* elevFracDown: interpolate the lower two HRIRs and multiply them by their "fraction"
                  elevFracUp: interpolate the upper two HRIRs and multiply them by their "fraction" */
-            x->currentImpulse[ch_L][i] = elevFracDown *
+            x->currentImpulse[x->ch_L][i] = elevFracDown *
                                         (azimFracDown * x->impulses[lowerIdx][0][i] + 
                                         azimFracDownInv * x->impulses[lowerIdx + 1][0][i]) +
                                         elevFracUp *
                                         (azimFracUp * x->impulses[upperIdx][0][i] + 
                                         azimFracUpInv * x->impulses[upperIdx + 1][0][i]);
 
-            x->currentImpulse[ch_R][i] = elevFracDown *
+            x->currentImpulse[x->ch_R][i] = elevFracDown *
                                         (azimFracDown * x->impulses[lowerIdx][1][i] +
                                         azimFracDownInv * x->impulses[lowerIdx + 1][1][i]) +
                                         elevFracUp *
@@ -139,11 +116,11 @@ static t_int *earplug_perform(t_int *w)
         {
             /* elevFracDown: these two lines interpolate the lower two HRIRs
                  elevFracUp: multiply the 90 degree HRIR with its corresponding fraction */
-            x->currentImpulse[ch_L][i] = elevFracDown * 
+            x->currentImpulse[x->ch_L][i] = elevFracDown * 
                                         (azimFracDown * x->impulses[360+azimIntDown][0][i] +
                                         (1.0 - azimFracDown) * x->impulses[361+azimIntDown][0][i])
                                         + elevFracUp * x->impulses[367][0][i];
-            x->currentImpulse[ch_R][i] = elevFracDown * 
+            x->currentImpulse[x->ch_R][i] = elevFracDown * 
                                         (azimFracDown * x->impulses[360+azimIntDown][1][i]  +
                                         (1.0 - azimFracDown) * x->impulses[361+azimIntDown][1][i])
                                         + elevFracUp * x->impulses[367][1][i]; 
@@ -186,6 +163,31 @@ static t_int *earplug_perform(t_int *w)
     return w + 6;
 }
 
+static void earplug_azimuth(t_earplug *x, float value) {
+    if (value < 0 || value > 360)
+        value = 0;
+    if (value <= 180){
+        x->ch_L = 0;
+        x->ch_R = 1;
+    }
+    else{ 
+        x->ch_L = 1;
+        x->ch_R = 0;
+        value = 360.0 - value;
+    }
+    x->azi = value;
+}
+
+static void earplug_elevation(t_earplug *x, float value) {
+
+    if (value < -40)
+        value = -40;
+    if (value > 90)
+        value = 90;
+    /* divided by 10 since each elevation is 10 degrees apart */
+    x->ele = value * 0.1;
+}
+
 static void earplug_dsp(t_earplug *x, t_signal **sp)
 {
     /* callback, params, userdata, in_samples,   out_L,        out_R,        blocksize */
@@ -197,11 +199,13 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
     t_earplug *x = (t_earplug *)pd_new(earplug_class);
     x->left_channel = outlet_new(&x->x_obj, gensym("signal"));
     x->right_channel = outlet_new(&x->x_obj, gensym("signal"));
-    floatinlet_new(&x->x_obj, &x->azimuth);   /* 0 to 360 degrees */
-    floatinlet_new(&x->x_obj, &x->elevation); /* -40 to 90 degrees */
+    inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym("azimuth"));
+    inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym("elevation"));
 
-    x->azimuth = azimArg;
-    x->elevation = elevArg;
+    x->azi = azimArg;
+    x->ele = elevArg;
+    x->ch_L = 0;
+    x->ch_R = 1;
 
     int i, j;
     FILE *fp;
@@ -288,6 +292,8 @@ void earplug_tilde_setup(void)
     CLASS_MAINSIGNALIN(earplug_class, t_earplug, f);
 
     class_addmethod(earplug_class, (t_method)earplug_dsp, gensym("dsp"), A_CANT, 0);
+    class_addmethod(earplug_class, (t_method)earplug_azimuth, gensym("azimuth"), A_FLOAT, 0);
+    class_addmethod(earplug_class, (t_method)earplug_elevation, gensym("elevation"), A_FLOAT, 0);
 
     post("earplug~ %s: binaural filter with measured responses", VERSION);
     post("    elevation: -40 to 90 degrees, azimuth: 360 degrees");
