@@ -17,7 +17,7 @@ t_float earplug_impulses[368][2][128] = {{{0.0f}}};
 #include "earplug_data.h"
 #endif
 
-#define VERSION "0.2.2"
+#define VERSION "0.3.0"
 
 /* these pragmas only apply to Microsoft's compiler */
 #ifdef _MSC_VER

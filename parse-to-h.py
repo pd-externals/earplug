@@ -16,7 +16,7 @@ if len(sys.argv) > 1:
     datafile = sys.argv[1]
 
 src = open(datafile, "r")
-dest = open("earplug.h", "w")
+dest = open("earplug_data.h", "w")
 
 lines = src.readlines()
 
